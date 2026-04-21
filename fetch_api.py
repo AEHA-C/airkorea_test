@@ -3,6 +3,7 @@
 import requests
 from urllib.parse import quote
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from config import (
     API_BASE_URL,
@@ -13,15 +14,12 @@ from config import (
     DATA_TERM,
     API_VERSION,
     NUM_OF_ROWS,
-    PAGE_NO
+    PAGE_NO,
+    TIMEZONE
 )
 
 
 def build_request_url(station_name: str) -> str:
-    """
-    serviceKey는 이미 URL 인코딩된 값이므로 그대로 붙인다.
-    stationName만 URL 인코딩한다.
-    """
     encoded_station_name = quote(station_name)
 
     url = (
@@ -35,6 +33,22 @@ def build_request_url(station_name: str) -> str:
         f"&ver={API_VERSION}"
     )
     return url
+
+
+def normalize_to_kst_string(dt_str: str) -> str:
+    """
+    API의 dataTime은 한국 측정시각 문자열(예: 2026-04-21 14:00)로 오므로
+    KST 기준 문자열로 통일해 저장한다.
+    """
+    if not dt_str:
+        return ""
+
+    try:
+        naive_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
+        kst_dt = naive_dt.replace(tzinfo=ZoneInfo(TIMEZONE))
+        return kst_dt.strftime("%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return dt_str
 
 
 def fetch_station_data(station_name: str):
@@ -63,8 +77,10 @@ def fetch_station_data(station_name: str):
 
     latest = items[0]
 
+    data_time_kst = normalize_to_kst_string(latest.get("dataTime", ""))
+
     row = [
-        latest.get("dataTime", ""),
+        data_time_kst,
         latest.get("stationName", station_name),
         latest.get("pm10Value", ""),
         latest.get("pm25Value", "")
@@ -76,15 +92,13 @@ def fetch_station_data(station_name: str):
 def fetch_all_stations_data():
     rows = []
 
-    # 실제 실행(수집) 시각
-    collected_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    collected_at = datetime.now(ZoneInfo(TIMEZONE)).strftime("%Y-%m-%d %H:%M:%S")
 
     for station_name in STATION_NAMES:
         try:
             row = fetch_station_data(station_name)
 
             if row:
-                # collectedAt 추가
                 row = [collected_at] + row
                 rows.append(row)
             else:
