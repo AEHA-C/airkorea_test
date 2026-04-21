@@ -23,7 +23,6 @@ def append_rows(rows, sheet_name):
         return None
 
     service = get_sheets_service()
-
     sheet_range = f"{sheet_name}!A:E"
 
     body = {
