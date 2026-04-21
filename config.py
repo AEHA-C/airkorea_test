@@ -7,10 +7,8 @@
 API_BASE_URL = "http://apis.data.go.kr"
 API_ENDPOINT = "/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"
 
-# 인코딩된 서비스키 (그대로 사용)
 SERVICE_KEY = "Qc8CY3xAGFKIy1H%2FdAIzBzcSYk%2B%2FnSnyKdjEn0oNqHRVV9z7LoGeqQ4MOsFIaLO7ePhFvzBvSJUzcngkmaJN0A%3D%3D"
 
-# 조회할 측정소
 STATION_NAMES = [
     "부산감만",
     "부산북항",
@@ -26,13 +24,13 @@ STATION_NAMES = [
     "전포동"
 ]
 
-# API 설정값
 API_RESPONSE_ENCODING = "utf-8"
 DATA_TERM = "DAILY"
 API_VERSION = "1.0"
 NUM_OF_ROWS = "100"
 PAGE_NO = "1"
 
+TIMEZONE = "Asia/Seoul"
 
 # =========================
 # Google Sheets 설정
@@ -41,5 +39,5 @@ PAGE_NO = "1"
 SERVICE_ACCOUNT_FILE = "service_account.json"
 SPREADSHEET_ID = "1eDrzgtt3WMEmSzUUOWJONxbllwf0gD_cMqHUoFHJX1k"
 
-SHEET_NAME = "시트1"
-SHEET_RANGE = f"{SHEET_NAME}!A:D"
+SHEET_NAME = "정각"
+SHEET_RANGE = f"{SHEET_NAME}!A:E"
