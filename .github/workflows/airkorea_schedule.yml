@@ -15,11 +15,8 @@ on:
 
   schedule:
     - cron: "0 * * * *"
-      timezone: "Asia/Seoul"
     - cron: "20 * * * *"
-      timezone: "Asia/Seoul"
     - cron: "23 * * * *"
-      timezone: "Asia/Seoul"
 
 jobs:
   run-airkorea:
@@ -53,18 +50,18 @@ jobs:
 
       - name: 정각 실행
         if: |
-          github.event_name == 'schedule' && github.event.schedule == '0 * * * *' ||
-          github.event_name == 'workflow_dispatch' && inputs.target == '정각'
+          (github.event_name == 'schedule' && github.event.schedule == '0 * * * *') ||
+          (github.event_name == 'workflow_dispatch' && inputs.target == '정각')
         run: python main_hourly_00.py
 
       - name: 20분 실행
         if: |
-          github.event_name == 'schedule' && github.event.schedule == '20 * * * *' ||
-          github.event_name == 'workflow_dispatch' && inputs.target == '20분'
+          (github.event_name == 'schedule' && github.event.schedule == '20 * * * *') ||
+          (github.event_name == 'workflow_dispatch' && inputs.target == '20분')
         run: python main_hourly_20.py
 
       - name: 23분 실행
         if: |
-          github.event_name == 'schedule' && github.event.schedule == '23 * * * *' ||
-          github.event_name == 'workflow_dispatch' && inputs.target == '23분'
+          (github.event_name == 'schedule' && github.event.schedule == '23 * * * *') ||
+          (github.event_name == 'workflow_dispatch' && inputs.target == '23분')
         run: python main_hourly_23.py
