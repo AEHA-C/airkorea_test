@@ -1,0 +1,31 @@
+name: Test AirKorea Manual Run
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: Python 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 패키지 설치
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 서비스 계정 JSON 파일 생성
+        run: |
+          cat <<'EOF' > service_account.json
+          ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          EOF
+
+      - name: 정각 시트 저장 테스트
+        run: python main_hourly_00.py
