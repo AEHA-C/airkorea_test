@@ -2,6 +2,7 @@
 
 import requests
 from urllib.parse import quote
+from datetime import datetime
 
 from config import (
     API_BASE_URL,
@@ -75,13 +76,20 @@ def fetch_station_data(station_name: str):
 def fetch_all_stations_data():
     rows = []
 
+    # 실제 실행(수집) 시각
+    collected_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     for station_name in STATION_NAMES:
         try:
             row = fetch_station_data(station_name)
+
             if row:
+                # collectedAt 추가
+                row = [collected_at] + row
                 rows.append(row)
             else:
                 print(f"[INFO] {station_name}: 데이터 없음")
+
         except Exception as e:
             print(f"[ERROR] {station_name}: {e}")
 

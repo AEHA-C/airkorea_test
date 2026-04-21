@@ -24,7 +24,7 @@ def append_rows(rows, sheet_name):
 
     service = get_sheets_service()
 
-    sheet_range = f"{sheet_name}!A:D"
+    sheet_range = f"{sheet_name}!A:E"
 
     body = {
         "values": rows
