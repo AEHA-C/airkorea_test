@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: 코드 가져오기
         uses: actions/checkout@v4
+          with:
+          ref: codex/fix-to-use-kst 
 
       - name: Python 설정
         uses: actions/setup-python@v5
