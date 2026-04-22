@@ -1,17 +1,15 @@
 from fetch_api import fetch_all_stations_data
 from google_sheets import append_rows
 
-HEADER = ["dataTime", "stationName", "pm10Value", "pm25Value"]
+RUN_TYPE = "정각"
+
 
 def run():
-    rows = fetch_all_stations_data()
+    rows = fetch_all_stations_data(RUN_TYPE)
 
     if not rows:
         print("저장할 데이터가 없습니다.")
         return
-
-    # 👉 처음 실행 시 헤더 추가 (선택)
-    # append_rows([HEADER])
 
     append_rows(rows)
 
