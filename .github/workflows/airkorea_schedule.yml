@@ -2,24 +2,10 @@ name: AirKorea Scheduler
 
 on:
   workflow_dispatch:
-    inputs:
-      target:
-        description: "수동 실행 대상"
-        required: true
-        default: "23분"
-        type: choice
-        options:
-          - 23분
-          - 33분
-          - 43분
-
   schedule:
     - cron: "23 * * * *"
-      timezone: "Asia/Seoul"
     - cron: "33 * * * *"
-      timezone: "Asia/Seoul"
     - cron: "43 * * * *"
-      timezone: "Asia/Seoul"
 
 jobs:
   run-airkorea:
@@ -28,8 +14,8 @@ jobs:
     steps:
       - name: 코드 가져오기
         uses: actions/checkout@v4
-          with:
-          ref: codex/fix-to-use-kst 
+        with:
+          ref: codex/fix-to-use-kst
 
       - name: Python 설정
         uses: actions/setup-python@v5
@@ -47,26 +33,14 @@ jobs:
           ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           EOF
 
-      - name: 현재 UTC 시간 출력
-        run: date -u +"%Y-%m-%d %H:%M:%S UTC"
-
-      - name: 현재 KST 시간 출력
-        run: TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
-
       - name: 23분 실행
-        if: |
-          (github.event_name == 'schedule' && github.event.schedule == '23 * * * *') ||
-          (github.event_name == 'workflow_dispatch' && inputs.target == '23분')
+        if: github.event.schedule == '23 * * * *'
         run: python main_hourly_23.py
 
       - name: 33분 실행
-        if: |
-          (github.event_name == 'schedule' && github.event.schedule == '33 * * * *') ||
-          (github.event_name == 'workflow_dispatch' && inputs.target == '33분')
+        if: github.event.schedule == '33 * * * *'
         run: python main_hourly_33.py
 
       - name: 43분 실행
-        if: |
-          (github.event_name == 'schedule' && github.event.schedule == '43 * * * *') ||
-          (github.event_name == 'workflow_dispatch' && inputs.target == '43분')
+        if: github.event.schedule == '43 * * * *'
         run: python main_hourly_43.py
