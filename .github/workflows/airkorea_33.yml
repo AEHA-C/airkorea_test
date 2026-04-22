@@ -3,6 +3,7 @@
 name: AirKorea 33분 수집
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "33 * * * *"
 
