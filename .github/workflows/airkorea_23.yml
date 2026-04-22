@@ -31,11 +31,11 @@ jobs:
           ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           EOF
 
-      - name: 현재 UTC 시간 출력
-        run: date -u +"%Y-%m-%d %H:%M:%S UTC"
-
-      - name: 현재 KST 시간 출력
-        run: TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
+      - name: 디버그 시간 로그 출력
+        run: |
+          echo "[DEBUG] GitHub event name: ${{ github.event_name }}"
+          echo "[DEBUG] UTC now: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "[DEBUG] KST now: $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M:%S KST')"
 
       - name: 23분 수집 실행
-        run: python main_hourly_23.py
+        run: python -u main_hourly_23.py
