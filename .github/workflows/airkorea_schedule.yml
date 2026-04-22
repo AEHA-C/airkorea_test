@@ -4,19 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "수동 실행 대상 runType"
+        description: "수동 실행 대상"
         required: true
-        default: "정각"
+        default: "23분"
         type: choice
         options:
-          - 정각
-          - 20분
           - 23분
+          - 33분
+          - 43분
 
   schedule:
-    - cron: "0 * * * *"
-    - cron: "20 * * * *"
     - cron: "23 * * * *"
+      timezone: "Asia/Seoul"
+    - cron: "33 * * * *"
+      timezone: "Asia/Seoul"
+    - cron: "43 * * * *"
+      timezone: "Asia/Seoul"
 
 jobs:
   run-airkorea:
@@ -42,25 +45,26 @@ jobs:
           ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           EOF
 
-      - name: 현재 UTC/KST 시간 출력
-        run: |
-          date -u +"%Y-%m-%d %H:%M:%S UTC"
-          TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
+      - name: 현재 UTC 시간 출력
+        run: date -u +"%Y-%m-%d %H:%M:%S UTC"
 
-      - name: 정각 실행
-        if: |
-          (github.event_name == 'schedule' && github.event.schedule == '0 * * * *') ||
-          (github.event_name == 'workflow_dispatch' && inputs.target == '정각')
-        run: python main_hourly_00.py
-
-      - name: 20분 실행
-        if: |
-          (github.event_name == 'schedule' && github.event.schedule == '20 * * * *') ||
-          (github.event_name == 'workflow_dispatch' && inputs.target == '20분')
-        run: python main_hourly_20.py
+      - name: 현재 KST 시간 출력
+        run: TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
 
       - name: 23분 실행
         if: |
           (github.event_name == 'schedule' && github.event.schedule == '23 * * * *') ||
           (github.event_name == 'workflow_dispatch' && inputs.target == '23분')
         run: python main_hourly_23.py
+
+      - name: 33분 실행
+        if: |
+          (github.event_name == 'schedule' && github.event.schedule == '33 * * * *') ||
+          (github.event_name == 'workflow_dispatch' && inputs.target == '33분')
+        run: python main_hourly_33.py
+
+      - name: 43분 실행
+        if: |
+          (github.event_name == 'schedule' && github.event.schedule == '43 * * * *') ||
+          (github.event_name == 'workflow_dispatch' && inputs.target == '43분')
+        run: python main_hourly_43.py
