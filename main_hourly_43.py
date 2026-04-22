@@ -1,9 +1,9 @@
-# main_hourly_23.py
+# main_hourly_43.py
 
 from fetch_api import fetch_all_stations_data
 from google_sheets import append_rows
 
-RUN_TYPE = "23분"
+RUN_TYPE = "43분"
 
 
 def run():
