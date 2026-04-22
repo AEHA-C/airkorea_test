@@ -15,7 +15,7 @@ from config import (
     API_VERSION,
     NUM_OF_ROWS,
     PAGE_NO,
-    TIMEZONE
+    TIMEZONE,
 )
 
 
@@ -33,22 +33,6 @@ def build_request_url(station_name: str) -> str:
         f"&ver={API_VERSION}"
     )
     return url
-
-
-def normalize_to_kst_string(dt_str: str) -> str:
-    """
-    API의 dataTime은 한국 측정시각 문자열(예: 2026-04-21 14:00)로 오므로
-    KST 기준 문자열로 통일해 저장한다.
-    """
-    if not dt_str:
-        return ""
-
-    try:
-        naive_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
-        kst_dt = naive_dt.replace(tzinfo=ZoneInfo(TIMEZONE))
-        return kst_dt.strftime("%Y-%m-%d %H:%M:%S")
-    except ValueError:
-        return dt_str
 
 
 def fetch_station_data(station_name: str):
@@ -77,29 +61,29 @@ def fetch_station_data(station_name: str):
 
     latest = items[0]
 
-    data_time_kst = normalize_to_kst_string(latest.get("dataTime", ""))
-
+    # dataTime은 API 원본 문자열을 그대로 사용한다.
     row = [
-        data_time_kst,
+        latest.get("dataTime", ""),
         latest.get("stationName", station_name),
         latest.get("pm10Value", ""),
-        latest.get("pm25Value", "")
+        latest.get("pm25Value", ""),
     ]
 
     return row
 
 
-def fetch_all_stations_data():
+def fetch_all_stations_data(run_type: str):
     rows = []
 
+    # 실행 시각은 KST로 고정한다.
     collected_at = datetime.now(ZoneInfo(TIMEZONE)).strftime("%Y-%m-%d %H:%M:%S")
 
     for station_name in STATION_NAMES:
         try:
-            row = fetch_station_data(station_name)
+            station_row = fetch_station_data(station_name)
 
-            if row:
-                row = [collected_at] + row
+            if station_row:
+                row = [run_type, collected_at] + station_row
                 rows.append(row)
             else:
                 print(f"[INFO] {station_name}: 데이터 없음")

@@ -21,7 +21,7 @@ STATION_NAMES = [
     "당리동",
     "대저동",
     "덕포동",
-    "전포동"
+    "전포동",
 ]
 
 API_RESPONSE_ENCODING = "utf-8"
@@ -30,6 +30,7 @@ API_VERSION = "1.0"
 NUM_OF_ROWS = "100"
 PAGE_NO = "1"
 
+# collectedAt 생성에 사용하는 타임존 (KST 고정)
 TIMEZONE = "Asia/Seoul"
 
 # =========================
@@ -39,5 +40,5 @@ TIMEZONE = "Asia/Seoul"
 SERVICE_ACCOUNT_FILE = "service_account.json"
 SPREADSHEET_ID = "1eDrzgtt3WMEmSzUUOWJONxbllwf0gD_cMqHUoFHJX1k"
 
-SHEET_NAME = "정각"
-SHEET_RANGE = f"{SHEET_NAME}!A:E"
+# 단일 시트 append 저장 구조
+SHEET_NAME = "통합"

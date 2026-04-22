@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "수동 실행 대상"
+        description: "수동 실행 대상 runType"
         required: true
         default: "정각"
         type: choice
@@ -42,11 +42,10 @@ jobs:
           ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           EOF
 
-      - name: 현재 UTC 시간 출력
-        run: date -u +"%Y-%m-%d %H:%M:%S UTC"
-
-      - name: 현재 KST 시간 출력
-        run: TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
+      - name: 현재 UTC/KST 시간 출력
+        run: |
+          date -u +"%Y-%m-%d %H:%M:%S UTC"
+          TZ=Asia/Seoul date +"%Y-%m-%d %H:%M:%S KST"
 
       - name: 정각 실행
         if: |
